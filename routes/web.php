@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
@@ -23,12 +24,20 @@ Route::get('/sitemap', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('/home', [AdminController::class, 'index'])->name('admin.home');
 
     // Маршруты для заказов
-    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
+    Route::get('/reservations', [ReservationController::class, 'admin_index'])->name('reservations.index');
+    Route::get('/menu', [MenuController::class, 'admin_index'])->name('menu');
+    Route::get('/menu/create', [MenuController::class, 'create'])->name('menu.create');
+    Route::post('/menu', [MenuController::class, 'store'])->name('menu.store');
+    Route::delete('/menu/{dish}', [MenuController::class, 'destroy'])->name('menu.destroy');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/users/{user}/make-admin', [UserController::class, 'makeAdmin'])->name('users.makeAdmin');
 
     // Добавьте остальные маршруты для админ-зоны здесь
 });
+
 
 use App\Http\Controllers\Auth\LoginController;
 
